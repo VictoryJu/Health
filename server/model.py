@@ -1,10 +1,6 @@
-import json
 import psycopg2
 from server import db
 import pandas as pd
-
-def user_handler(obj):
-  return obj.isoformat() if hasattr(obj,'isoformat') else obj
 
 def data_frame(curs):
   data = pd.DataFrame(curs.fetchall())
