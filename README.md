@@ -14,6 +14,19 @@ pip install flask_restx
 ## 실행방법입니다.
 `최상위 폴더에서 python start_server 로 서버실행 `
 
+## server폴더에 db.py 생성후 아래의 내용을 알맞게 입력합니다.
+```
+import psycopg2
+
+def getConnection():
+  return psycopg2.connect(
+    host='호스트',
+    user='유저이름',
+    password='패스워드',
+    dbname='데이터베이스이름'
+    )
+```
+
 ## API 설명입니다
 
 ### person
