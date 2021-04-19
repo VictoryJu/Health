@@ -1,5 +1,5 @@
 import json
-import pymysql
+import psycopg2
 from server import db
 import pandas as pd
 
@@ -11,15 +11,6 @@ def data_frame(curs):
   data .columns = [desc[0] for desc in curs.description]
   return data
 
-# def getAllUsers():
-#   conn = getConnection()
-#   curs = conn.cursor(pymysql.cursors.DictCursor)
-#   sql = "SELECT userID,nickname,email,contribution FROM User;"
-#   curs.execute(sql)
-#   rows = curs.fetchall()
-#   conn.close()
-#   return json.dumps(rows, default = user_handler)
-
 def getAllPerson():
   conn = db.getConnection()
   curs = conn.cursor()
@@ -28,15 +19,6 @@ def getAllPerson():
   data = data_frame(curs)
   conn.close()
   return data
-
-# def getAllGender():
-#   conn = db.getConnection()
-#   curs = conn.cursor()
-#   sql = "SELECT COUNT(gender_concept_id) AS gender FROM person GROUP BY gender_concept_id;"
-#   curs.execute(sql)
-#   result = curs.fetchall()
-#   conn.close()
-#   return result
 
 def getAllGender():
   conn = db.getConnection()
@@ -66,19 +48,6 @@ def getRaceConcept():
 def getDeathPerson():
   conn = db.getConnection()
   curs = conn.cursor()
-  sql =  "SELECT c.concept_name, COUNT(p.ethnicity_concept_id)\
-          FROM person p \
-          INNER JOIN concept c \
-          ON c.concept_id = p.ethnicity_concept_id \
-          GROUP BY c.concept_name , p.ethnicity_concept_id;"
-  curs.execute(sql)
-  data = data_frame(curs)
-  conn.close()
-  return data
-
-def getDeathPerson():
-  conn = db.getConnection()
-  curs = conn.cursor()
   sql = "SELECT count(person_id) as death_count FROM death;"
   curs.execute(sql)
   data = data_frame(curs)
@@ -89,8 +58,23 @@ def getSerchConcept(serchIdx):
   serch = serchIdx
   conn = db.getConnection()
   curs = conn.cursor()
-  sql = "SELECT concept_name FROM concept WHERE concept_id = %s;"
-  curs.execute(sql,serch)
+  sql = f"SELECT concept_name, concept_id FROM concept WHERE concept_id = {serch};"
+  curs.execute(sql)
+  data = data_frame(curs)
+  conn.close()
+  return data
+
+def getGenderVisit():
+  conn = db.getConnection()
+  curs = conn.cursor()
+  sql = "SELECT COUNT(p.gender_concept_id) AS gender_count , c.concept_name AS Gender\
+          FROM person p \
+          INNER JOIN visit_occurrence v \
+          ON p.person_id = v.person_id \
+          INNER JOIN concept c \
+          ON c.concept_id = p.gender_concept_id \
+          GROUP BY p.gender_concept_id , c.concept_name;"
+  curs.execute(sql)
   data = data_frame(curs)
   conn.close()
   return data
