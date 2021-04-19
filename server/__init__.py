@@ -45,13 +45,20 @@ def getDeathPerson():
 
 # 키워드 검색
 # concept_id 정보 조회
-@app.route("/serch/<int:serchIdx>",methods=['GET'])
+@app.route("/concept/<int:serchIdx>",methods=['GET'])
 def getSerchConcept(serchIdx):
   result = model.getSerchConcept(serchIdx)
   print(result)
   return str(result)
 
 # visit 테이블 관련
+# 방문유형별 방문수 조회
+@app.route("/visit",methods=['GET'])
+def getVisit():
+  result = model.getVisit()
+  print(result)
+  return str(result)
+
 # 성별 방문수 조회
 @app.route("/visit/gender",methods=['GET'])
 def getGenderVisit():

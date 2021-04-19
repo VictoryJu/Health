@@ -78,3 +78,13 @@ def getGenderVisit():
   data = data_frame(curs)
   conn.close()
   return data
+
+def getVisit():
+  conn = db.getConnection()
+  curs = conn.cursor()
+  sql = "SELECT visit_concept_id, COUNT(visit_concept_id) AS visit \
+          FROM visit_occurrence GROUP BY visit_concept_id;"
+  curs.execute(sql)
+  data = data_frame(curs)
+  conn.close()
+  return data
