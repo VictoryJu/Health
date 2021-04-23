@@ -1,6 +1,7 @@
 import psycopg2
 from server import db
 import pandas as pd
+from psycopg2 import pool
 
 def data_frame(curs):
   data = pd.DataFrame(curs.fetchall())
@@ -8,12 +9,14 @@ def data_frame(curs):
   return data
 
 def getAllPerson():
-  conn = db.getConnection()
+  conn = db.getConn()
   curs = conn.cursor()
   sql = "SELECT COUNT(person_id) AS person FROM person;"
   curs.execute(sql)
   data = data_frame(curs)
   conn.close()
+  post_pool.putconn(conn)
+  data = db.getConn()
   return data
 
 def getAllGender():
@@ -26,6 +29,7 @@ def getAllGender():
   curs.execute(sql)
   data = data_frame(curs)
   conn.close()
+  post_pool.putconn(conn)
   return data
 
 def getRaceConcept():
@@ -39,6 +43,7 @@ def getRaceConcept():
   curs.execute(sql)
   data = data_frame(curs)
   conn.close()
+  post_pool.putconn(conn)
   return data
 
 def getDeathPerson():
@@ -48,6 +53,7 @@ def getDeathPerson():
   curs.execute(sql)
   data = data_frame(curs)
   conn.close()
+  post_pool.putconn(conn)
   return data
 
 def getSerchConcept(serchIdx):
@@ -58,6 +64,7 @@ def getSerchConcept(serchIdx):
   curs.execute(sql)
   data = data_frame(curs)
   conn.close()
+  post_pool.putconn(conn)
   return data
 
 def getGenderVisit():
@@ -73,6 +80,7 @@ def getGenderVisit():
   curs.execute(sql)
   data = data_frame(curs)
   conn.close()
+  post_pool.putconn(conn)
   return data
 
 def getVisit():
@@ -83,4 +91,5 @@ def getVisit():
   curs.execute(sql)
   data = data_frame(curs)
   conn.close()
+  post_pool.putconn(conn)
   return data
